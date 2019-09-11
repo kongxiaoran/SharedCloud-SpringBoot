@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sharedcloud.dao.impl.UserDaoImpl">
+
+    <sql id="use">user</sql>
+
+    <insert id="insert" parameterType="User" keyProperty="id"  useGeneratedKeys="true">
+        INSERT INTO <include refid="use"/> (account,password,username,permission,imgurl,userpath) values(#{account},#{password},#{username},#{permission},#{imgurl},#{userpath})
+    </insert>
+
+    <select id="getBy" parameterType="java.util.HashMap" resultType="User">
+        SELECT * FROM <include refid="use"/> u WHERE u.status != 9
+        <if test="id != ''">and u.id = #{id}</if>
+        <if test="account !=''">and u.account = #{account}</if>
+        <if test="username != ''">and u.username = #{username}</if>
+    </select>
+
+    <select id="getByAccount" parameterType="String" resultType="User">
+        SELECT * FROM <include refid="use"/> u WHERE u.status != 9
+        AND u.account = #{account}
+    </select>
+
+    <select id="getUserListByAccount" parameterType="String" resultType="User">
+        SELECT * FROM <include refid="use"/> u WHERE u.status != 9
+        AND account like CONCAT(CONCAT('%', #{account}), '%')
+    </select>
+
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sharedcloud.dao.impl.TokenDaoImpl">
+
+    <sql id="token">token</sql>
+
+    <insert id="insert" parameterType="Token" keyProperty="id"  useGeneratedKeys="true">
+        INSERT INTO <include refid="token"/> (account,token,validtime) values(#{account},#{token},#{validtime})
+    </insert>
+
+    <select id="getById" parameterType="long" resultType="Token">
+        SELECT * FROM <include refid="token"/> WHERE token.status != 9 AND token.id = #{id}
+    </select>
+    
+    <select id="getByAccount" parameterType="String" resultType="Token">
+        SELECT * FROM <include refid="token"/> WHERE token.status != 9 AND token.account = #{account}
+    </select>
+
+    <select id="getBy" parameterType="java.util.HashMap" resultType="Token">
+        SELECT * FROM <include refid="token"/> WHERE token.status != 9
+        <if test="id != null">and token.id = #{id}</if>
+        <if test="account != null || account !=''">and token.account = #{account}</if>
+    </select>
+
+    <delete id="removeById" parameterType="long">
+        DELETE FROM <include refid="token"/> WHERE token.id = #{id}
+    </delete>
+
+    <delete id="removeByAccount" parameterType="long">
+        DELETE FROM <include refid="token"/> WHERE token.account = #{account}
+    </delete>
+
+    <update id="update" parameterType="Token">
+        UPDATE <include refid="token"/> SET status = 1
+        <if test="token != null">,token = #{token}</if>
+        <if test="validtime != null">,validtime = #{validtime}</if>
+        <if test="status != null">,status = #{status}</if>
+        WHERE status != 9
+        <if test="account !=null">and account = #{account}</if>
+    </update>
+
+</mapper>
